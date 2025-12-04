@@ -31,7 +31,7 @@ export default function Navbar() {
       <div className="flex items-center">
         <Image src="/logo.jpg" alt="BridgeIT Logo" width={50} height={50} className="rounded-full" />
         <span className="ml-3 text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-600">
-         BridgeIT
+          BridgeIT
         </span>
       </div>
 
@@ -67,6 +67,18 @@ export default function Navbar() {
           </motion.button>
         </Link>
 
+        {/* Admin Button - Desktop */}
+        <Link href="/admin">
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="bg-green-500 hover:bg-green-600 text-white font-medium px-5 py-2 rounded-full shadow-md hover:shadow-lg active:opacity-90 outline-none transition-all duration-300 hidden md:block"
+            aria-label="Admin"
+          >
+            Admin
+          </motion.button>
+        </Link>
+
         {/* Hamburger - Mobile */}
         <div className="md:hidden">
           <button onClick={toggleMenu} aria-label="Toggle Menu">
@@ -93,6 +105,12 @@ export default function Navbar() {
             <Link href="/auth/login-user" onClick={() => setMenuOpen(false)}>
               <button className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-full transition">
                 Sign In
+              </button>
+            </Link>
+            {/* Admin Button for Mobile */}
+            <Link href="/admin" onClick={() => setMenuOpen(false)}>
+              <button className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-full transition">
+                Admin
               </button>
             </Link>
           </motion.div>
