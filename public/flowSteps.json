@@ -1,0 +1,28 @@
+[
+    {
+      "title": "Step 1: Register",
+      "description": "To start using BridgeIT, you need to register. Fill in your details and create an account."
+   
+    },
+    {
+      "title": "Step 2: Create Your Project",
+      "description": "Once registered, navigate to the 'My Projects' section to create a new project."
+   
+    },
+    {
+      "title": "Step 3: Explore Projects",
+      "description": "Browse available projects in the 'Explore' section. Use filters to find projects that interest you."
+
+    },
+    {
+      "title": "Step 4: Send Proposals",
+      "description": "Select a project you like and submit a proposal to the industry expert for feedback."
+  
+    },
+    {
+      "title": "Step 5: Receive Answers",
+      "description": "Check your notifications to view responses from industry experts regarding your proposals."
+      
+    }
+  ]
+  
