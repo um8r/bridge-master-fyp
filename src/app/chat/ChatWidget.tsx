@@ -5,35 +5,36 @@ import { IoMdSend } from "react-icons/io"
 import { IoChatbubbleEllipsesOutline } from "react-icons/io5"
 import { FiLoader } from "react-icons/fi"
 
-// Store predefined responses
+// Store detailed predefined responses (all lowercase keys for matching)
 const promptsAndResponses: { [key: string]: string } = {
-  "Who are you?":
-    "I am the BridgeIT chatbot, here to help you connect with academia and industry professionals in Pakistan.",
-  "What is BridgeIT?":
-    "BridgeIT is a collaborative platform designed to bridge the gap between academia and industry in Pakistan. It connects students, faculty, and industry professionals through real-world projects and mentorship opportunities.",
-  "How does BridgeIT work?":
-    "BridgeIT allows students to find industry-relevant projects, faculty to guide projects with real-world applications, and professionals to post and collaborate on projects. Would you like help getting started?",
-  "What can I do on this platform?":
-    "On BridgeIT, you can explore industry projects, connect with mentors, and collaborate on real-world solutions. Whether you're a student, faculty member, or industry professional, the platform has resources for you.",
-  "Is BridgeIT free to use?":
-    "Yes, BridgeIT is free for students and faculty to explore projects and find mentors. Industry professionals may use certain premium features based on the project scope.",
-  "How can I find projects?":
-    'You can browse industry projects by using filters like technology, industry, or required skills. Simply visit the "Projects" section to get started.',
-  "What kinds of projects are available?":
-    "BridgeIT offers projects across various disciplines, including Computer Science, Engineering, Design, and more. You can filter projects based on your interests.",
-  "Can I post a project?":
-    "Industry professionals and faculty members can post projects on BridgeIT. You can specify project details, required skills, budget, and deadlines.",
-  "How do I apply for a project?":
-    "Students can apply for projects by browsing through available listings and submitting their profile and proposal for consideration.",
-  "What is the success rate for projects on BridgeIT?":
-    "Many projects have led to internships, job offers, and successful collaborations between students and industry professionals. Would you like to see some success stories?",
-  "How can faculty members use BridgeIT?":
-    "Faculty members can create profiles, collaborate with industry professionals, and guide students on real-world projects. You can also stay updated on industry trends through the platform.",
-  "Can I list projects as a faculty member?":
-    "Yes, faculty members can list projects, connect with industry professionals, and guide students on final-year projects that align with real-world needs.",
-  "How can faculty members collaborate with industry professionals?":
-    "Faculty members can connect with industry professionals by collaborating on listed projects, sharing expertise, and contributing to industry-academia partnerships.",
-  "Who are youu?": "I am the BridgeIT chatbot.",
+  "who are you":
+    "I m the BridgeIT assistant. I guide students, faculty, and industry partners on how to find, post, or collaborate on real-world projects across Pakistan.",
+  "what is bridgeit":
+    "BridgeIT is a collaboration hub that connects students, faculty, and industry professionals. It helps teams find projects, co-mentor students, and deliver solutions aligned to real industry needs.",
+  "how does bridgeit work":
+    "BridgeIT matches roles to actions: students browse and apply to industry-backed projects, faculty co-mentor and align coursework, and industry professionals post challenges and review proposals. Everything is organized so teams can start quickly with clear scopes.",
+  "what can i do on this platform":
+    "You can browse active projects, post new project briefs, apply or propose solutions, and collaborate with mentors or industry partners. Tell me your role and goal, and I ll outline your next steps.",
+  "is bridgeit free to use":
+    "Students and faculty can explore and apply to projects for free. Industry partners can post projects and may choose premium options if they need extended support or faster sourcing.",
+  "how can i find projects":
+    "Open the Projects section, then filter by technology, industry, skills, duration, or difficulty. Shortlist matches and read the brief to confirm scope, timeline, and deliverables before you apply.",
+  "what kinds of projects are available":
+    "You ll find software, data, engineering, design, research, and interdisciplinary briefs. Each project lists skills, timelines, and expected outcomes—filter to the stack or domain you prefer.",
+  "can i post a project":
+    "Yes. Draft a clear brief with problem statement, context, expected outcomes, required skills, timeline, and review cadence. Post it, then review incoming proposals and chat with shortlisted teams.",
+  "how do i apply for a project":
+    "Open a project, click apply, and submit a concise proposal: your skills, past work, your plan, a rough timeline, and communication cadence. Tailor it to the problem and keep it clear and realistic.",
+  "what is the success rate for projects on bridgeit":
+    "Strong matches do well: clear briefs, realistic timelines, and active check-ins lead to internships, offers, or published results. I can share tips to improve your proposal if you tell me your profile.",
+  "how can faculty members use bridgeit":
+    "Faculty can co-post or co-mentor projects, align them with coursework, supervise students, and connect with industry partners for feedback and assessment.",
+  "can i list projects as a faculty member":
+    "Yes—faculty can list projects directly or co-list with industry partners. Include learning objectives, deliverables, and assessment criteria to set clear expectations.",
+  "how can faculty members collaborate with industry professionals":
+    "They can co-create briefs, co-mentor student teams, run milestone reviews, and ensure academic rigor while delivering industry-relevant outcomes.",
+  "who are youu":
+    "I m the BridgeIT assistant. I can direct you to projects, mentors, or posting flows based on your role.",
 }
 
 // Define message type
@@ -41,6 +42,17 @@ interface Message {
   sender: "user" | "ai"
   text: string
 }
+
+const suggestedPrompts = [
+  { label: "Who are you?", value: "who are you" },
+  { label: "What is BridgeIT?", value: "what is bridgeit" },
+  { label: "How does BridgeIT work?", value: "how does bridgeit work" },
+  { label: "How can I find projects?", value: "how can i find projects" },
+  { label: "Can I post a project?", value: "can i post a project" },
+  { label: "How do I apply for a project?", value: "how do i apply for a project" },
+  { label: "Faculty collaboration", value: "how can faculty members collaborate with industry professionals" },
+  { label: "Payment guidance", value: "payment guidance" },
+]
 
 const ChatWidget: React.FC = () => {
   const [isChatOpen, setIsChatOpen] = useState(false)
@@ -84,57 +96,125 @@ const ChatWidget: React.FC = () => {
 
   // Check if we have a predefined response
   const checkPredefinedResponse = (input: string): string | null => {
-    // Case insensitive search
     const normalizedInput = input.trim().toLowerCase()
+    return promptsAndResponses[normalizedInput] ?? null
+  }
 
-    for (const [question, answer] of Object.entries(promptsAndResponses)) {
-      if (question.toLowerCase() === normalizedInput) {
-        return answer
-      }
+  // Lightweight local responder to avoid external APIs (no vague fallbacks)
+  const generateLocalAnswer = (input: string): string => {
+    const normalized = input.toLowerCase()
+
+    const isStudent =
+      normalized.includes("student") ||
+      normalized.includes("apply") ||
+      normalized.includes("enroll") ||
+      normalized.includes("join")
+    const isFaculty =
+      normalized.includes("faculty") ||
+      normalized.includes("mentor") ||
+      normalized.includes("professor") ||
+      normalized.includes("supervisor")
+    const isIndustry =
+      normalized.includes("industry") ||
+      normalized.includes("company") ||
+      normalized.includes("sponsor") ||
+      normalized.includes("partner")
+    const isProject = normalized.includes("project")
+    const isPost = normalized.includes("post") || normalized.includes("create")
+    const isPayment =
+      normalized.includes("payment") ||
+      normalized.includes("pay") ||
+      normalized.includes("invoice") ||
+      normalized.includes("history")
+
+    if (isPayment) {
+      return [
+        "Payment guidance:",
+        "• Students: open Payment History to review past transactions; for new payments, follow the payment CTA on your active project dashboard.",
+        "• Industry partners: if you need invoicing or receipts, check the billing section of your organization profile or contact support with your project ID.",
+        "• If something looks off, capture the transaction ID and reach out via support; we’ll reconcile it for you.",
+      ].join(" ")
     }
 
-    return null
+    if (isIndustry && isPost) {
+      return [
+        "Posting as an industry partner:",
+        "1) Draft a brief: problem statement, context, required skills, timeline, deliverables, and review cadence.",
+        "2) Post it in the Projects area; enable messaging so applicants can clarify scope.",
+        "3) Shortlist proposals that show a clear plan and feasible timeline; schedule a quick call for alignment.",
+        "4) Run milestones: kickoff, midpoint check, final review, and outcome handoff.",
+      ].join(" ")
+    }
+
+    if (isIndustry) {
+      return [
+        "How industry partners work here:",
+        "• Post a project with scope, success criteria, and timeline.",
+        "• Review proposals, shortlist, and co-mentor with faculty if needed.",
+        "• Use milestone reviews to keep delivery on track and provide timely feedback.",
+      ].join(" ")
+    }
+
+    if (isFaculty && isPost) {
+      return [
+        "Posting or co-mentoring as faculty:",
+        "• Co-create a brief with industry or post your own applied project.",
+        "• Add learning objectives, assessment criteria, and communication cadence.",
+        "• Host milestone reviews (proposal, midpoint, final) to keep students on track.",
+      ].join(" ")
+    }
+
+    if (isFaculty) {
+      return [
+        "Faculty guidance:",
+        "• Co-mentor projects with industry partners and supervise student teams.",
+        "• Align projects with coursework and set clear rubrics for assessment.",
+        "• Encourage students to submit concise proposals and hold regular check-ins.",
+      ].join(" ")
+    }
+
+    if (isStudent && isPost) {
+      return [
+        "Students cannot post projects, but you can propose solutions to posted briefs.",
+        "Pick a project, then submit a clear proposal with your plan, timeline, and relevant work.",
+      ].join(" ")
+    }
+
+    if (isStudent) {
+      return [
+        "Applying as a student:",
+        "1) Open Projects, filter by your skills or target tech stack.",
+        "2) Read the brief; note deliverables, timeline, and required tools.",
+        "3) Apply with a concise proposal: your plan, milestones, communication cadence, and links to past work.",
+        "4) After acceptance, attend kickoff, share weekly updates, and prep a final demo with results.",
+      ].join(" ")
+    }
+
+    if (isProject || isPost) {
+      return [
+        "Working with projects here:",
+        "• Posting: include problem, context, skills, timeline, deliverables, and review cadence.",
+        "• Applying: tailor a short proposal with your approach, milestones, and relevant portfolio.",
+        "• Delivery: run milestone reviews (kickoff, midpoint, final) and keep updates concise.",
+      ].join(" ")
+    }
+
+    // General catch-all but still actionable (no vague fallback)
+    return [
+      "I can help you act quickly. Tell me your role (student, faculty, industry) and your goal (apply, post, or review payments), and I’ll lay out exact steps.",
+      "If you’re unsure, start with Projects: pick a brief, read scope and timeline, then propose a clear plan with milestones.",
+    ].join(" ")
   }
 
   const send_prompt = async (prompt: string): Promise<string> => {
-    try {
-      // First check if we have a predefined response
-      const predefinedResponse = checkPredefinedResponse(prompt)
-      if (predefinedResponse) {
-        return predefinedResponse
-      }
-
-      // Otherwise, call the API
-      const response = await fetch(
-        "https://api-bridgeit-chatbot-hjczfjcrgjgrd6ct.canadacentral-01.azurewebsites.net/chat",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            question: prompt,
-          }),
-        },
-      )
-
-      if (!response.ok) {
-        throw new Error(`Error: ${response.statusText}`)
-      }
-
-      const data = await response.json()
-      return data.answer.trim()
-    } catch (error) {
-      console.error("Error:", error)
-      return "I'm having trouble connecting to my knowledge base right now. Please try again in a moment."
-    }
+    const predefined = checkPredefinedResponse(prompt)
+    if (predefined) return predefined
+    return generateLocalAnswer(prompt)
   }
 
-  const handleUserInput = async () => {
-    if (!userInput.trim()) return
-
-    const userMessage = userInput.trim()
-    setUserInput("")
+  const askPrompt = async (prompt: string) => {
+    if (!prompt.trim()) return
+    const userMessage = prompt.trim()
 
     // Add user message immediately
     setMessages((prev) => [...prev, { sender: "user", text: userMessage }])
@@ -161,6 +241,16 @@ const ChatWidget: React.FC = () => {
     }
   }
 
+  const handleUserInput = async () => {
+    // Manual input is disabled; rely on suggested prompts only
+    return
+  }
+
+  const handleSuggestedClick = (prompt: string) => {
+    if (isLoading) return
+    askPrompt(prompt)
+  }
+
   return (
     <div className="relative z-50">
       {/* Floating Action Button */}
@@ -177,9 +267,9 @@ const ChatWidget: React.FC = () => {
 
       {/* Chat Modal */}
       {isChatOpen && (
-        <div className="fixed bottom-20 right-5 w-80 h-96 bg-gradient-to-br from-white to-gray-50 rounded-lg shadow-2xl flex flex-col overflow-hidden border border-gray-200 animate-fadeIn">
-          <div className="bg-gradient-to-r from-purple-600 to-blue-500 text-white flex justify-between items-center p-3">
-            <h3 className="text-lg font-semibold">Chat with BridgeIT</h3>
+        <div className="fixed bottom-24 right-6 w-[26rem] max-w-[90vw] h-[34rem] bg-gradient-to-br from-white to-gray-50 rounded-2xl shadow-2xl flex flex-col overflow-hidden border border-gray-200 animate-fadeIn">
+          <div className="bg-gradient-to-r from-purple-600 to-blue-500 text-white flex justify-between items-center px-4 py-3.5">
+            <h3 className="text-xl font-semibold">Chat with BridgeIT</h3>
             <button
               aria-label="Close chat"
               onClick={toggleChat}
@@ -189,7 +279,7 @@ const ChatWidget: React.FC = () => {
             </button>
           </div>
 
-          <div className="p-4 flex-grow overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
+          <div className="px-4 py-3 flex-grow overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
             {/* Chat messages */}
             {messages.map((msg, index) => {
               const isUser = msg.sender === "user"
@@ -197,7 +287,7 @@ const ChatWidget: React.FC = () => {
                 <div key={index} className={`my-2 flex ${isUser ? "justify-end" : "justify-start"} animate-messageIn`}>
                   <div
                     className={`
-                      px-4 py-2 max-w-[75%] rounded-xl 
+                      px-4 py-3 max-w-[82%] rounded-xl text-[15px] leading-relaxed
                       ${
                         isUser
                           ? "bg-gradient-to-bl from-blue-200 to-blue-300 text-gray-800 shadow-sm"
@@ -225,28 +315,27 @@ const ChatWidget: React.FC = () => {
             <div ref={messagesEndRef} />
           </div>
 
-          {/* Input Field */}
-          <div className="p-3 border-t border-gray-200 bg-white flex items-center space-x-2">
-            <input
-              ref={inputRef}
-              type="text"
-              className="w-full p-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-400"
-              value={userInput}
-              onChange={(e) => setUserInput(e.target.value)}
-              onKeyDown={(e) => (e.key === "Enter" ? handleUserInput() : null)}
-              placeholder="Type a message..."
-              disabled={isLoading}
-            />
-            <button
-              aria-label="Send message"
-              className={`px-4 py-2 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 text-white font-medium 
-                         shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-300 
-                         focus:outline-none focus:ring-2 focus:ring-blue-400 ${isLoading ? "opacity-50 cursor-not-allowed" : ""}`}
-              onClick={handleUserInput}
-              disabled={isLoading}
-            >
-              <IoMdSend />
-            </button>
+          {/* Suggested prompts only */}
+          <div className="border-t border-gray-200 bg-white px-4 py-3.5">
+            <p className="text-xs font-semibold uppercase tracking-wide text-gray-500 mb-3">
+              Quick questions (tap to ask)
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+              {suggestedPrompts.map((item) => (
+                <button
+                  key={item.value}
+                  onClick={() => handleSuggestedClick(item.value)}
+                  disabled={isLoading}
+                  className={`w-full rounded-xl border px-3.5 py-2.5 text-sm text-left font-medium transition-all duration-150 ${
+                    isLoading
+                      ? "cursor-not-allowed opacity-60 border-gray-200 bg-gray-50 text-gray-400"
+                      : "border-blue-100 bg-blue-50 text-blue-900 hover:border-blue-200 hover:bg-blue-100 hover:-translate-y-[1px]"
+                  }`}
+                >
+                  {item.label}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       )}

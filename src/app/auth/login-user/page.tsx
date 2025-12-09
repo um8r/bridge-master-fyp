@@ -16,7 +16,7 @@ import {
   FaEyeSlash,
 } from 'react-icons/fa';
 import Image from 'next/image';
-import { Link } from 'lucide-react';
+
 
 const LoginPage: React.FC = () => {
   const [email, setEmail] = useState("");
@@ -223,21 +223,7 @@ const LoginPage: React.FC = () => {
               </span>
             </div>
   
-            {/* Icons */}
-            <div className="flex justify-center gap-6 mt-6">
-              <Link href="/auth/register-user">
-                <FaUserGraduate className="text-2xl sm:text-3xl text-blue-500 hover:text-blue-600 transition" />
-              </Link>
-              <Link href="/auth/register-user">
-                <FaChalkboardTeacher className="text-2xl sm:text-3xl text-blue-500 hover:text-blue-600 transition" />
-              </Link>
-              <Link href="/auth/register-user">
-                <FaBriefcase className="text-2xl sm:text-3xl text-blue-500 hover:text-blue-600 transition" />
-              </Link>
-              <Link href="/auth/register-user">
-                <FaUniversity className="text-2xl sm:text-3xl text-blue-500 hover:text-blue-600 transition" />
-              </Link>
-            </div>
+          
           </form>
   
           <ToastContainer />

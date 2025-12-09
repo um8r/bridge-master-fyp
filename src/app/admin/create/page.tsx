@@ -18,27 +18,40 @@ const AdminCreatePage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-800 text-gray-200">
-      <h1 className="text-4xl font-bold mb-8">Admin Dashboard</h1>
-      <div className="space-y-4 w-full max-w-xs">
-        <button
-          onClick={goToCreateCompany}
-          className="w-full py-3 px-6 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition duration-200"
-        >
-          Create Company
-        </button>
-        <button
-          onClick={goToCreateUniversity}
-          className="w-full py-3 px-6 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition duration-200"
-        >
-          Create University
-        </button>
-        <button
-          onClick={goToViewCompanies}
-          className="w-full py-3 px-6 bg-yellow-600 text-white font-semibold rounded-lg hover:bg-yellow-700 transition duration-200"
-        >
-          View All Companies
-        </button>
+    <div className="min-h-screen bg-slate-50 text-slate-900 flex items-center justify-center px-4">
+      <div className="w-full max-w-xl rounded-2xl border border-blue-100 bg-white shadow-sm p-8 md:p-10">
+        <div className="mb-8 space-y-2">
+          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-blue-700">
+            Admin
+          </p>
+          <h1 className="text-3xl md:text-4xl font-extrabold text-blue-950">
+            Create Records
+          </h1>
+          <p className="text-slate-600">
+            Add new companies or universities, or review existing companies.
+          </p>
+        </div>
+
+        <div className="grid gap-4">
+          <button
+            onClick={goToCreateCompany}
+            className="w-full rounded-xl border border-blue-200 bg-blue-600 px-6 py-4 text-white font-semibold shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-300"
+          >
+            Create Company
+          </button>
+          <button
+            onClick={goToCreateUniversity}
+            className="w-full rounded-xl border border-blue-200 bg-white px-6 py-4 text-blue-900 font-semibold shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:border-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-300"
+          >
+            Create University
+          </button>
+          <button
+            onClick={goToViewCompanies}
+            className="w-full rounded-xl border border-blue-200 bg-white px-6 py-4 text-blue-900 font-semibold shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:border-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-300"
+          >
+            View All Companies
+          </button>
+        </div>
       </div>
     </div>
   );
