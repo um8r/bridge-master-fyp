@@ -67,12 +67,12 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-white text-gray-800 overflow-hidden">
       <Navbar />
-      <HeroSection />
+      {/* <HeroSection />
       <MissionSection />
       <KeyFeaturesSection />
       <ImpactSection impactView={impactView} handleToggle={handleToggle} data={data} loading={loading} />
       <ContactSection />
-      <Footer />
+      <Footer /> */}
     </div>
   )
 }
